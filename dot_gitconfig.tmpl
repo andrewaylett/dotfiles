@@ -1,0 +1,35 @@
+[user]
+	name = Andrew Aylett
+	email = {{ .email }}
+	signingkey = {{ .secretive.gitsigningkey }}
+[init]
+	defaultBranch = main
+	templateDir = {{ .chezmoi.homeDir }}/.local/share/git-template
+[gpg]
+	format = ssh
+[commit]
+	gpgSign = true
+[push]
+	gpgSign = if-asked
+	autoSetupRemote = true
+[tag]
+	gpgSign = true
+[gc]
+	cruftPacks = true
+[rebase]
+	updateRefs = true
+[core]
+	autocrlf = input
+	fsmonitor = true
+	untrackedCache = true
+[fetch]
+	prune = true
+	writeCommitGraph = true
+[pull]
+	rebase = true
+[merge]
+	ff = only
+[transfer]
+	fsckobjects = true
+[url "git@github.com:"]
+	insteadOf = https://github.com/

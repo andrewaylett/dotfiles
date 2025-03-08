@@ -1,2 +1,11 @@
+{{ $email := promptStringOnce . "email" "What is your email address" -}}
+{{ $git_sign_key := promptStringOnce . "secretive.gitsigningkey" "What is your git commit signing public key path?" -}}
+
 [data.brew]
-prefix="{{ if eq .chezmoi.arch "amd64" }}/usr/local/{{ else }}/opt/homebrew{{ end }}"
+prefix="{{ if eq .chezmoi.arch "amd64" }}/usr/local{{ else }}/opt/homebrew{{ end }}"
+
+[data.secretive]
+gitsigningkey={{ $git_sign_key | quote }}
+
+[data]
+email={{ $email | quote }}
