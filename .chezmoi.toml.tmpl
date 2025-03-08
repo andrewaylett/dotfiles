@@ -1,0 +1,2 @@
+[data.brew]
+prefix="{{ if eq .chezmoi.arch "amd64" }}/usr/local/{{ else }}/opt/homebrew{{ end }}"
