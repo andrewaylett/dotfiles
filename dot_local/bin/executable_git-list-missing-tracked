@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -euo pipefail
+
+for branch in $(git branch --format="%(refname:lstrip=2)")
+do
+  if git config branch.$branch.remote >/dev/null
+  then
+    # Branch has remote tracking
+    ORIGIN_NAME=$(git config branch.$branch.remote)
+    ORIGIN_REF=$(git config branch.$branch.merge)
+    if git ls-remote --exit-code $ORIGIN_NAME $ORIGIN_REF >/dev/null
+    then
+      true
+    else
+      echo "$branch"
+    fi
+  fi
+done

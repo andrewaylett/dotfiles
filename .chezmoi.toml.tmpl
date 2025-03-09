@@ -1,11 +1,18 @@
-{{ $email := promptStringOnce . "email" "What is your email address" -}}
-{{ $git_sign_key := promptStringOnce . "secretive.gitsigningkey" "What is your git commit signing public key path?" -}}
+{{- $email := promptStringOnce . "email" "What is your email address" -}}
 
-[data.brew]
-prefix="{{ if eq .chezmoi.arch "amd64" }}/usr/local{{ else }}/opt/homebrew{{ end }}"
+{{- $git_sign_key := promptStringOnce . "secretive.gitsigningkey" "What is your git commit signing public key path?" -}}
 
-[data.secretive]
-gitsigningkey={{ $git_sign_key | quote }}
+{{- $osid := printf "%s-%s" .chezmoi.os .chezmoi.arch -}}
+{{- if hasKey .chezmoi.osRelease "id" -}}
+{{-   $osid = printf "%s-%s-%s" .chezmoi.os .chezmoi.osRelease.id .chezmoi.arch -}}
+{{- end -}}
 
 [data]
 email={{ $email | quote }}
+osid = {{ $osid | quote }}
+
+[data.brew]
+prefix="{{ if eq $osid "darwin-amd64" }}/usr/local{{ else if eq $osid "darwin-arm64" }}/opt/homebrew{{ end }}"
+
+[data.secretive]
+gitsigningkey={{ $git_sign_key | quote }}

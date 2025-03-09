@@ -18,3 +18,7 @@ url="https://github.com/tpope/vim-sensible.git"
 type="git-repo"
 url="https://github.com/tpope/vim-sleuth.git"
 
+[".vim/bundle/chezmoi.vim"]
+type="git-repo"
+url="https://github.com/alker0/chezmoi.vim.git"
+

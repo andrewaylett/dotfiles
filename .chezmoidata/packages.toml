@@ -1,0 +1,11 @@
+
+[packages.darwin]
+brews = [
+"asdf",
+"calc",
+"atuin",
+"git",
+"bash",
+]
+casks = [
+]

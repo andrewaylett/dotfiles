@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -euo pipefail
+
+CURRENT_REF=$(git symbolic-ref HEAD --short)
+
+for branch in $(git for-each-ref --format="%(refname:lstrip=2)" refs/heads/)
+do
+  echo $branch
+  if git config branch.$branch.remote
+  then
+    # Branch has remote tracking
+    ORIGIN_NAME=$(git config branch.$branch.remote)
+    ORIGIN_REF=$(git symbolic-ref refs/remotes/$ORIGIN_NAME/HEAD --short)
+    git rebase "$ORIGIN_REF" "$branch" || git rebase --abort
+  fi
+done
+
+git checkout --no-guess $CURRENT_REF
+

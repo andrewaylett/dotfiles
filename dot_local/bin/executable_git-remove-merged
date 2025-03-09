@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -euo pipefail
+
+for branch in $(git branch --format="%(refname:lstrip=2)" --merged)
+do
+  echo "Considering $branch"
+  if git config branch.$branch.remote
+  then
+    # Branch has remote tracking
+    ORIGIN_NAME=$(git config branch.$branch.remote)
+    ORIGIN_REF=$(git config branch.$branch.merge)
+    if git ls-remote --exit-code $ORIGIN_NAME $ORIGIN_REF
+    then
+      echo "Remote branch still exists, skipping"
+    else
+      echo "Removing branch"
+      git branch -D $branch
+    fi
+  else
+    echo "Tracking not presnt, assuming not yet pushed"
+  fi
+done
