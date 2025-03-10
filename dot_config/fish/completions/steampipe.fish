@@ -1,0 +1,1 @@
+steampipe completion fish | source

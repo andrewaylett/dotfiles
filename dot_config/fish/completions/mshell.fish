@@ -1,0 +1,1 @@
+mshell completion fish | source

@@ -22,6 +22,8 @@
 	autocrlf = input
 	fsmonitor = true
 	untrackedCache = true
+[alias]
+	prebase = rebase -x 'pre-commit run --from-ref HEAD~ --to-ref HEAD'
 [fetch]
 	prune = true
 	writeCommitGraph = true
@@ -33,3 +35,5 @@
 	fsckobjects = true
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[url "ssh://git@github.skyscannertools.net/"]
+    insteadOf = https://github.skyscannertools.net/
