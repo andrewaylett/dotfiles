@@ -15,20 +15,21 @@ brews = [
 "jq",
 "kubernetes-cli",
 "pre-commit",
-"pyenv",
-"pyenv-virtualenv",
 "qrencode",
 "ripgrep",
 "rustup",
 "semgrep",
+"uv",
 "watch",
 "zoxide",
 ]
 casks = [
 "font-ibm-plex",
 "font-jetbrains-mono",
+"hiddenbar",
 "jetbrains-toolbox",
 "lunar",
+"notunes",
 "raycast",
 "secretive",
 ]
