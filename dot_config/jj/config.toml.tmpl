@@ -1,0 +1,18 @@
+[user]
+name = "Andrew Aylett"
+email = "{{ .email }}"
+
+[ui]
+default-command = "log"
+
+[git]
+write-change-id-header = true
+
+[aliases]
+pre-commit = ["util", "exec", "--", "bash", "-c", """
+#!/usr/bin/env bash
+set -euo pipefail
+FROM=$(jj log --no-graph -r "fork_point(trunk() | @)" -T "commit_id")
+TO=$(jj log --no-graph -r "@" -T "commit_id")
+pre-commit run --from="$FROM" --to="$TO" "$@"
+""", ""]
