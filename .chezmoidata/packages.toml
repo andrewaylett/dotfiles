@@ -16,6 +16,7 @@ brews = [
 "kubernetes-cli",
 "pre-commit",
 "qrencode",
+"rink",
 "ripgrep",
 "rustup",
 "semgrep",
