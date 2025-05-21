@@ -4,9 +4,24 @@ email = "{{ .email }}"
 
 [ui]
 default-command = "log"
+merge-editor = "meld"
+log-word-wrap = true
 
 [git]
 write-change-id-header = true
+
+[revset-aliases]
+'archive_refs()' = 'bookmarks(glob:"archive/*")'
+'working_refs()' = 'present(@) | present(trunk()) | (bookmarks() ~ archive_refs())'
+'archive()' = '::archive_refs() ~ ::((~::archive_refs()) | working_refs())'
+#'archive()' = '::archive_refs() ~ ::((visible_heads() | bookmarks() | trunk()) ~ archive_refs())'
+'live_heads()' = 'heads(~archive() & mutable())'
+'live_fork_point()' = 'fork_point(live_heads())'
+'working_set()' = 'connected(present(@) | live_fork_point() | present(trunk()) | live_heads())'
+
+[revsets]
+'log' = 'working_set()'
+#'log' = 'present(@) | ancestors((live_heads().. | working_set()), 2) | present(trunk())'
 
 [aliases]
 pre-commit = ["util", "exec", "--", "bash", "-c", """
@@ -16,3 +31,15 @@ FROM=$(jj log --no-graph -r "fork_point(trunk() | @)" -T "commit_id")
 TO=$(jj log --no-graph -r "@" -T "commit_id")
 pre-commit run --from="$FROM" --to="$TO" "$@"
 """, ""]
+
+rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
+rebase-all-trunk = ["rebase", "-b", "all:(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
+
+[core]
+fsmonitor = "watchman"
+
+[core.watchman]
+register-snapshot-trigger = true
+
+[snapshot]
+auto-track = '~glob:"*~" & ~glob:".*.swp"'
