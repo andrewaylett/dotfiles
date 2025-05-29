@@ -17,10 +17,12 @@ write-change-id-header = true
 #'archive()' = '::archive_refs() ~ ::((visible_heads() | bookmarks() | trunk()) ~ archive_refs())'
 'live_heads()' = 'heads(~archive() & mutable())'
 'live_fork_point()' = 'fork_point(live_heads())'
-'working_set()' = 'connected(present(@) | live_fork_point() | present(trunk()) | live_heads())'
+'working_heads()' = 'live_heads() | present(@) | present(trunk())'
+'working_fork_point()' = 'fork_point(working_heads())'
+'working_set()' = 'connected(working_fork_point() | working_heads())'
 
 [revsets]
-'log' = 'working_set()'
+'log' = 'ancestors(working_set(), 2)'
 #'log' = 'present(@) | ancestors((live_heads().. | working_set()), 2) | present(trunk())'
 
 [aliases]
