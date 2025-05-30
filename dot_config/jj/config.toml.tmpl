@@ -4,8 +4,13 @@ email = "{{ .email }}"
 
 [ui]
 default-command = "log"
-merge-editor = "meld"
+merge-editor = "idea"
+diff-editor = ["idea", "merge", "$left", "$right", "$output", "--wait"]
 log-word-wrap = true
+
+[merge-tools.idea]
+merge-args = ["-na", "/Users/andrewaylett/Applications/IntelliJ IDEA Ultimate.app/Contents/MacOS/idea", "-W", "--args", "merge", "$left", "$right", "$base", "$output"]
+program = "open"
 
 [git]
 write-change-id-header = true
@@ -17,7 +22,7 @@ write-change-id-header = true
 #'archive()' = '::archive_refs() ~ ::((visible_heads() | bookmarks() | trunk()) ~ archive_refs())'
 'live_heads()' = 'heads(~archive() & mutable())'
 'live_fork_point()' = 'fork_point(live_heads())'
-'working_heads()' = 'live_heads() | present(@) | present(trunk())'
+'working_heads()' = 'live_heads() | present(@) | present(trunk()) | git_head() | working_copies()'
 'working_fork_point()' = 'fork_point(working_heads())'
 'working_set()' = 'connected(working_fork_point() | working_heads())'
 
