@@ -32,7 +32,6 @@ write-change-id-header = true
 
 [aliases]
 pre-commit = ["util", "exec", "--", "bash", "-c", """
-#!/usr/bin/env bash
 set -euo pipefail
 EMPTY=$(jj log --no-graph -r @ -T 'empty')
 if [ "$EMPTY" = "false" ]
@@ -42,6 +41,16 @@ fi
 FROM=$(jj log --no-graph -r "fork_point(trunk() | @)" -T "commit_id")
 TO=$(jj log --no-graph -r "@" -T "commit_id")
 pre-commit run --from="$FROM" --to="$TO" "$@"
+""", ""]
+
+pre-commit-branch = ["util", "exec", "--", "bash", "-c", """
+set -euo pipefail
+for change in $(jj log -r "(::@ & mutable()):: ~ empty()" --no-graph -T 'change_id ++ "\n"' --reversed)
+do
+  jj new "$change"
+  [ "$(jj log --no-graph -r @ -T conflict)" = "false" ] || break
+  jj pre-commit
+done
 """, ""]
 
 rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
