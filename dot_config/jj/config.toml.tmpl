@@ -4,13 +4,13 @@ email = "{{ .email }}"
 
 [ui]
 default-command = "log"
-merge-editor = "idea"
-diff-editor = ["idea", "merge", "$left", "$right", "$output", "--wait"]
+#merge-editor = "idea"
+#diff-editor = ["idea", "merge", "$left", "$right", "$output", "--wait"]
 log-word-wrap = true
 
-[merge-tools.idea]
-merge-args = ["-na", "/Users/andrewaylett/Applications/IntelliJ IDEA Ultimate.app/Contents/MacOS/idea", "-W", "--args", "merge", "$left", "$right", "$base", "$output"]
-program = "open"
+#[merge-tools.idea]
+#merge-args = ["-na", "/Users/andrewaylett/Applications/IntelliJ IDEA Ultimate.app/Contents/MacOS/idea", "-W", "--args", "merge", "$left", "$right", "$base", "$output"]
+#program = "open"
 
 [git]
 write-change-id-header = true
@@ -81,4 +81,4 @@ fsmonitor = "watchman"
 register-snapshot-trigger = true
 
 [snapshot]
-auto-track = '~glob:"*~" & ~glob:".*.swp"'
+auto-track = '~glob:"*~" & ~glob:".*.swp" & ~glob:"node_modules"'

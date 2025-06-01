@@ -7,9 +7,12 @@ function fish_jj_prompt
     set -l info "$(
         jj log 2>/dev/null --no-graph --ignore-working-copy --color=always --revisions @ \
             --template '
+              surround("(", ")",
                 separate(" ",
+                    coalesce(if(empty, label("empty", "empty")), change_id.shortest()),
                     if(conflict, label("conflict", "×")),
                 )
+              )
             '
     )"
     or return 1
