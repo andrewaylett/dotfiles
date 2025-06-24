@@ -20,7 +20,7 @@ write-change-id-header = true
 'working_refs()' = 'present(@) | present(trunk()) | (bookmarks() ~ archive_refs())'
 'archive()' = '::archive_refs() ~ ::((~::archive_refs()) | working_refs())'
 #'archive()' = '::archive_refs() ~ ::((visible_heads() | bookmarks() | trunk()) ~ archive_refs())'
-'live_heads()' = 'heads(~archive() & mutable())'
+'live_heads()' = 'heads(mutable() ~ archive())'
 'live_fork_point()' = 'fork_point(live_heads())'
 'working_heads()' = 'live_heads() | present(@) | present(trunk()) | git_head() | working_copies()'
 'working_fork_point()' = 'fork_point(working_heads())'
@@ -33,14 +33,32 @@ write-change-id-header = true
 [aliases]
 pre-commit = ["util", "exec", "--", "bash", "-c", """
 set -euo pipefail
+
+REPO_ROOT="$(jj config path --repo)/../.."
+PASSED_FILE="$REPO_ROOT/pre-commit-passes"
+
+mkdir -p "$REPO_ROOT"
+touch "$PASSED_FILE"
+
 EMPTY=$(jj log --no-graph -r @ -T 'empty')
-if [ "$EMPTY" = "false" ]
-then
+if [ "$EMPTY" = "false" ]; then
   jj new
 fi
+
 FROM=$(jj log --no-graph -r "fork_point(trunk() | @)" -T "commit_id")
 TO=$(jj log --no-graph -r "@" -T "commit_id")
-pre-commit run --from="$FROM" --to="$TO" "$@"
+
+if grep -Fxq "$TO" "$PASSED_FILE"; then
+  echo "pre-commit already passed for $TO, skipping."
+  exit 0
+fi
+
+if pre-commit run --from="$FROM" --to="$TO" "$@"; then
+  echo "$TO" >> "$PASSED_FILE"
+else
+  echo "pre-commit failed for $TO"
+  exit 1
+fi
 """, ""]
 
 pre-commit-branch = ["util", "exec", "--", "bash", "-c", """
