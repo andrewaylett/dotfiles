@@ -37,7 +37,6 @@ set -euo pipefail
 REPO_ROOT="$(dirname $(jj config path --user))"
 PASSED_FILE="$REPO_ROOT/pre-commit-passes"
 
-mkdir -p "$REPO_ROOT"
 touch "$PASSED_FILE"
 
 EMPTY=$(jj log --no-graph -r @ -T 'empty')
