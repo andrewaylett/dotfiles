@@ -34,7 +34,7 @@ write-change-id-header = true
 pre-commit = ["util", "exec", "--", "bash", "-c", """
 set -euo pipefail
 
-REPO_ROOT="$(jj config path --repo)/../.."
+REPO_ROOT="$(dirname $(jj config path --user))"
 PASSED_FILE="$REPO_ROOT/pre-commit-passes"
 
 mkdir -p "$REPO_ROOT"
