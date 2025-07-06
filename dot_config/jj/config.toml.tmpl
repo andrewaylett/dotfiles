@@ -52,7 +52,7 @@ if grep -Fxq "$TO" "$PASSED_FILE"; then
   exit 0
 fi
 
-if pre-commit run --from="$FROM" --to="$TO" "$@"; then
+if uvx --with 'pre-commit-uv' pre-commit run --from="$FROM" --to="$TO" "$@"; then
   echo "$TO" >> "$PASSED_FILE"
 else
   echo "pre-commit failed for $TO"
