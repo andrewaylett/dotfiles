@@ -4,19 +4,31 @@ function fish_jj_prompt
     if not command -sq jj
         return 1
     end
-    set -l info "$(
+    set -l cur "$(
         jj log 2>/dev/null --no-graph --ignore-working-copy --color=always --revisions @ \
             --template '
-              surround("(", ")",
                 separate(" ",
                     coalesce(if(empty, label("empty", "empty")), change_id.shortest()),
                     if(conflict, label("conflict", "×")),
                 )
-              )
             '
     )"
     or return 1
-    if test -n "$info"
-        printf ' %s' $info
+    set -l prev "$(
+        jj log 2>/dev/null --no-graph --ignore-working-copy --color=always --revisions @- \
+            --template '
+                separate(" ",
+                    coalesce(if(empty, label("empty", "empty")), change_id.shortest()),
+                    if(conflict, label("conflict", "×")),
+                )
+            '
+    )"
+    or return 1
+    if test -n "$cur"
+        printf ' (%s' $cur
+        if test -n "$prev"
+            printf ', %s' $prev
+        end
+        printf ')'
     end
 end
