@@ -74,10 +74,10 @@ rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
 rebase-all-trunk = ["rebase", "-b", "all:(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
 sq = ["squash"]
 
-[core]
-fsmonitor = "watchman"
+[fsmonitor]
+backend = "watchman"
 
-[core.watchman]
+[fsmonitor.watchman]
 register-snapshot-trigger = true
 
 [snapshot]
