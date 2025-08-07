@@ -71,7 +71,7 @@ done
 """, ""]
 
 rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
-rebase-all-trunk = ["rebase", "-b", "all:(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
+rebase-all-trunk = ["rebase", "-b", "(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
 sq = ["squash"]
 
 [fsmonitor]
