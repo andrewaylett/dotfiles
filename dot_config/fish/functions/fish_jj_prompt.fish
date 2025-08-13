@@ -6,29 +6,10 @@ function fish_jj_prompt
     end
     set -l cur "$(
         jj log 2>/dev/null --no-graph --ignore-working-copy --color=always --revisions @ \
-            --template '
-                separate(" ",
-                    coalesce(if(empty, label("empty", "empty")), change_id.shortest()),
-                    if(conflict, label("conflict", "×")),
-                )
-            '
-    )"
-    or return 1
-    set -l prev "$(
-        jj log 2>/dev/null --no-graph --ignore-working-copy --color=always --revisions @- \
-            --template '
-                separate(" ",
-                    coalesce(if(empty, label("empty", "empty")), change_id.shortest()),
-                    if(conflict, label("conflict", "×")),
-                )
-            '
+            --template 'commit_and_parents_info'
     )"
     or return 1
     if test -n "$cur"
-        printf ' (%s' $cur
-        if test -n "$prev"
-            printf ', %s' $prev
-        end
-        printf ')'
+        printf ' (%s)' $cur
     end
 end

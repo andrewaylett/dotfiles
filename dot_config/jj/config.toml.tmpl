@@ -71,8 +71,28 @@ done
 """, ""]
 
 rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
-rebase-all-trunk = ["rebase", "-b", "(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
+rebase-all-trunk = ["rebase", "-b", "all:(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
 sq = ["squash"]
+
+[template-aliases]
+'micro_commit_info(c)' = '''
+concat(
+  if(c.immutable(), label("immutable", "◆")),
+  coalesce(
+    if(c.empty() && !c.immutable(), label("empty", "empty")),
+    c.change_id().shortest()
+  ),
+  if(c.conflict(), label("conflict", "×")),
+)
+'''
+
+commit_and_parents_info = '''
+separate(
+  ", ",
+  micro_commit_info(self),
+  parents.map(|c| micro_commit_info(c)).join("+")
+)
+'''
 
 [fsmonitor]
 backend = "watchman"
