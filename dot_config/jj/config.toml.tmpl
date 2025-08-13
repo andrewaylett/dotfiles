@@ -45,7 +45,7 @@ if [ "$EMPTY" = "false" ]; then
 fi
 
 FROM=$(jj log --no-graph -r "fork_point(trunk() | @)" -T "commit_id")
-TO=$(jj log --no-graph -r "@" -T "commit_id")
+TO=$(jj log --no-graph -r "@-" -T "commit_id")
 
 if grep -Fxq "$TO" "$PASSED_FILE"; then
   echo "pre-commit already passed for $TO, skipping."
