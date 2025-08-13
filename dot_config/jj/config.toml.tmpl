@@ -83,6 +83,11 @@ concat(
     c.change_id().shortest()
   ),
   if(c.conflict(), label("conflict", "×")),
+  coalesce(
+    if(c.contained_in("trunk()"), label("git_head", "―")),
+    if(c.contained_in("trunk()::"), label("git_head", "↑")),
+    "↓"
+  )
 )
 '''
 

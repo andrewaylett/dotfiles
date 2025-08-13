@@ -5,7 +5,7 @@ function fish_jj_prompt
         return 1
     end
     set -l cur "$(
-        jj log 2>/dev/null --no-graph --ignore-working-copy --color=always --revisions @ \
+        jj log 2>/dev/null --no-graph --color=always --revisions @ \
             --template 'commit_and_parents_info'
     )"
     or return 1
