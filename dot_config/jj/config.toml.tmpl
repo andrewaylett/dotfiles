@@ -26,6 +26,10 @@ write-change-id-header = true
 'working_fork_point()' = 'fork_point(working_heads())'
 'working_set()' = 'connected(working_fork_point() | working_heads())'
 
+'branch_heads()' = 'working_refs() | remote_bookmarks() | git_head() | working_copies()'
+'branch_fork_point()' = 'fork_point(branch_heads())'
+'branch_set()' = 'connected(branch_heads() | branch_fork_point())'
+
 [revsets]
 'log' = 'ancestors(working_set(), 2)'
 #'log' = 'present(@) | ancestors((live_heads().. | working_set()), 2) | present(trunk())'
@@ -38,6 +42,13 @@ REPO_ROOT="$(dirname $(jj config path --user))"
 PASSED_FILE="$REPO_ROOT/pre-commit-passes"
 
 touch "$PASSED_FILE"
+
+TREE=$(git rev-parse HEAD^{tree})
+
+if grep -Fxq "$TREE" "$PASSED_FILE"; then
+  echo "pre-commit already passed for tree $TREE, skipping."
+  exit 0
+fi
 
 EMPTY=$(jj log --no-graph -r @ -T 'empty')
 if [ "$EMPTY" = "false" ]; then
@@ -54,6 +65,7 @@ fi
 
 if uvx --with 'pre-commit-uv' pre-commit run --from="$FROM" --to="$TO" "$@"; then
   echo "$TO" >> "$PASSED_FILE"
+  echo "$TREE" >> "$PASSED_FILE"
 else
   echo "pre-commit failed for $TO"
   exit 1
@@ -62,17 +74,34 @@ fi
 
 pre-commit-branch = ["util", "exec", "--", "bash", "-c", """
 set -euo pipefail
+
+REPO_ROOT="$(dirname $(jj config path --user))"
+PASSED_FILE="$REPO_ROOT/pre-commit-passes"
+
+touch "$PASSED_FILE"
+
 for change in $(jj log -r "(::@ & mutable()):: ~ empty()" --no-graph -T 'change_id ++ "\n"' --reversed)
 do
-  jj new "$change"
-  [ "$(jj log --no-graph -r @ -T conflict)" = "false" ] || break
-  jj pre-commit
+  TO=$(jj log --no-graph -r "$change" -T "commit_id")
+  TREE=$(git rev-parse $TO^{tree})
+
+  if grep -Fxq "$TO" "$PASSED_FILE"; then
+    echo "pre-commit already passed for $change, skipping."
+  elif grep -Fxq "$TREE" "$PASSED_FILE"; then
+    echo "pre-commit already passed for the tree in $change, skipping."
+  else
+    jj new "$change"
+    [ "$(jj log --no-graph -r @ -T conflict)" = "false" ] || break
+    jj pre-commit
+  fi
 done
 """, ""]
 
 rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
 rebase-all-trunk = ["rebase", "-b", "all:(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
 sq = ["squash"]
+log-all = ["log", "-r", "::"]
+log-branches = ["log", "-r", "branch_set()"]
 
 [template-aliases]
 'micro_commit_info(c)' = '''
