@@ -14,6 +14,7 @@ log-word-wrap = true
 
 [git]
 write-change-id-header = true
+colocate = true
 
 [revset-aliases]
 'archive_refs()' = 'bookmarks(glob:"archive/*")'
@@ -35,6 +36,11 @@ write-change-id-header = true
 #'log' = 'present(@) | ancestors((live_heads().. | working_set()), 2) | present(trunk())'
 
 [aliases]
+with-git = ["util", "exec", "--", "bash", "-c", """
+set -euo pipefail
+export GIT_DIR=$(jj git root)
+exec "$0" "$@"
+"""]
 pre-commit = ["util", "exec", "--", "bash", "-c", """
 set -euo pipefail
 
@@ -43,6 +49,7 @@ PASSED_FILE="$REPO_ROOT/pre-commit-passes"
 
 touch "$PASSED_FILE"
 
+export GIT_DIR=$(jj git root)
 TREE=$(git rev-parse HEAD^{tree})
 
 if grep -Fxq "$TREE" "$PASSED_FILE"; then
