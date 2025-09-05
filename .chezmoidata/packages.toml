@@ -1,7 +1,6 @@
 
 [packages.darwin]
 brews = [
-"asdf",
 "atuin",
 "bash",
 "calc",
@@ -14,6 +13,7 @@ brews = [
 "jj",
 "jq",
 "kubernetes-cli",
+"mise",
 "pre-commit",
 "qrencode",
 "rink",
