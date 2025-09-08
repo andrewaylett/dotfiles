@@ -107,6 +107,7 @@ done
 rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
 rebase-all-trunk = ["rebase", "-b", "(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
 sq = ["squash"]
+nt = ["new", "trunk()"]
 log-all = ["log", "-r", "::"]
 log-branches = ["log", "-r", "branch_set()"]
 
