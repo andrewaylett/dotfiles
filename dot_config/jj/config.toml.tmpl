@@ -105,7 +105,7 @@ done
 """, ""]
 
 rebase-trunk = ["rebase", "-b", "@", "-d", "trunk()"]
-rebase-all-trunk = ["rebase", "-b", "all:(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
+rebase-all-trunk = ["rebase", "-b", "(visible_heads() ~ immutable_heads()) & working_set()", "-d", "trunk()"]
 sq = ["squash"]
 log-all = ["log", "-r", "::"]
 log-branches = ["log", "-r", "branch_set()"]
@@ -135,11 +135,11 @@ separate(
 )
 '''
 
-[fsmonitor]
-backend = "watchman"
-
-[fsmonitor.watchman]
-register-snapshot-trigger = true
+#[fsmonitor]
+#backend = "watchman"
+#
+#[fsmonitor.watchman]
+#register-snapshot-trigger = true
 
 [snapshot]
 auto-track = '~glob:"*~" & ~glob:".*.swp" & ~glob:"node_modules" & ~glob:".DS_Store" & ~glob:"mise.*.local.toml" & ~glob:"mise.local.toml"'
