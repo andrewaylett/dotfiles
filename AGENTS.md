@@ -30,21 +30,24 @@ For example, test with check rather than build.
 
 # Tasks
 
-We track work in Beads instead of Markdown.  Run `bd quickstart` to see how.
+Other collaborators may not use beads to track work, but we do.
 
-Make sure there's a task for any work you're doing.
+Record tasks using bead, and check with bead when looking for work.  The `bd`
+command gives you access, or you can use the bead MCP server.
 
-Use a Kanban style, where you split bigger tasks into smaller tasks to complete them.
-Ask if you don't have enough context for a task.
-Split tasks until they're small enough to complete in a single context window.
-Add new tasks if you see something that needs doing but that doesn't fit with your current task.
+Run `bd quickstart` for instructions.
 
-Avoid making fixes in code that's not yet covered by tests -- write the tests first.
+Always record your plans in tasks.  Use a Kanban style, where you split bigger
+tasks into smaller tasks to complete them.  Ask if you don't have enough
+context for a task.  Split tasks until they're small enough to complete in a
+single context window.
+
+Use `bd ready` to get a list of tasks you could start.
+
+Regardless of priority, if there's a task for testing of an area of code you
+should work on that before working on possible bug fixes.
 
 Make sure you update tasks when you've made changes that affect them.
-
-Beads saves its tasks in the working copy, and they will be committed into each
-revision.
 
 # Documentation
 
@@ -52,4 +55,6 @@ Always add suitable documentation.  Emphasise why over how, and if you don't
 know why then ask instead of guessing.  Documentation should normally be
 developer-focused.
 
-If you learn something about the code that's worth remembering, document it in an AGENTS.md file in the root of the repository.
+If you learn something about the code that's worth remembering, document it in
+an AGENTS.md file in the root of the repository, or in the nearest AGENTS.md if
+the project has more than one.
