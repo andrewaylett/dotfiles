@@ -23,11 +23,11 @@ colocate = true
 #'archive()' = '::archive_refs() ~ ::((visible_heads() | bookmarks() | trunk()) ~ archive_refs())'
 'live_heads()' = 'heads(mutable() ~ archive())'
 'live_fork_point()' = 'fork_point(live_heads())'
-'working_heads()' = 'live_heads() | present(@) | present(trunk()) | git_head() | working_copies()'
+'working_heads()' = 'live_heads() | present(@) | present(trunk()) | first_parent(@) | working_copies()'
 'working_fork_point()' = 'fork_point(working_heads())'
 'working_set()' = 'connected(working_fork_point() | working_heads())'
 
-'branch_heads()' = 'working_refs() | remote_bookmarks() | git_head() | working_copies()'
+'branch_heads()' = 'working_refs() | remote_bookmarks() | first_parent(@) | working_copies()'
 'branch_fork_point()' = 'fork_point(branch_heads())'
 'branch_set()' = 'connected(branch_heads() | branch_fork_point())'
 
