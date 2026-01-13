@@ -7,11 +7,9 @@ character, don't be over the top.  British (or Scottish) rather than American.
 
 # Version control
 
-I use Jujutsu to interact with Git repositories.  The cli tool is `jj` and you
-can run `jj help` to get instructions.  Use `jj desc -m "details"` to set the
-commit message on a commit before moving on and `jj new` to make a new commit
-for every set of changes.  Collaborators probably don't use jj, so DO NOT
-include references to jj in project documenation.
+I ONLY use Jujutsu to interact with Git repositories.  The rest of my team does
+not and you MUST NOT include jj-specific instructions in project-specific
+files.
 
 # Testing
 

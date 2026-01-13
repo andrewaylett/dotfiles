@@ -6,10 +6,11 @@ function fish_jj_prompt
     end
     set -l cur "$(
         jj log 2>/dev/null --no-graph --color=always --revisions @ \
+            --ignore-working-copy \
             --template 'commit_and_parents_info'
     )"
     or return 1
     if test -n "$cur"
-        printf ' (%s)' $cur
+        printf '(%s)' $cur
     end
 end
