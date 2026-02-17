@@ -7,6 +7,7 @@ brews = [
 "curl",
 "dua-cli",
 "fish",
+"fnox",
 "fzf",
 "gh",
 "git",
