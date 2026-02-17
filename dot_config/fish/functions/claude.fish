@@ -1,0 +1,15 @@
+function claude --description 'Launch Claude Code with theme matching macOS appearance' --wraps claude
+    if defaults read -g AppleInterfaceStyle &>/dev/null
+        set -l theme dark
+    else
+        set -l theme light
+    end
+
+    set -l config_file ~/.claude.json
+    if test -f $config_file
+        jq --arg t $theme '.theme = $t' $config_file >$config_file.tmp
+            and mv $config_file.tmp $config_file
+    end
+
+    command claude $argv
+end
