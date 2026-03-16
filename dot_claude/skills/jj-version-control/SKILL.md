@@ -125,12 +125,9 @@ jj op restore <operation-id>
 
 ## Workflow Preferences
 
-When completing work on a commit:
+When completing work on a commit, run `jj commit -m "description"` to set the commit message and create a new commit for the next set of changes
 
-1. Run `jj desc -m "description"` to set the commit message
-2. Run `jj new` to create a new commit for the next set of changes
-
-Before finalizing changes, run `jj pre-commit` to execute tests, linting, and formatting.
+After, if appropriate and the repository uses pre-commit, you may run `jj pre-commit` to execute tests, linting, and formatting. This will always create a fresh commit.
 
 ## What NOT to Do
 
