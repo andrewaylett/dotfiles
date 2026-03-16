@@ -4,9 +4,34 @@ email = "{{ .email }}"
 
 [ui]
 default-command = "log"
+conflict-marker-style = "git"
 #merge-editor = "idea"
 #diff-editor = ["idea", "merge", "$left", "$right", "$output", "--wait"]
 log-word-wrap = true
+#diff-formatter = [
+  #"difft",
+  ##"--color=always",
+  #"--display=inline",
+  #"$left",
+  #"$right"
+#]
+diff-formatter = "patience"
+
+[merge-tools.patience]
+program = "git"
+diff-expected-exit-codes = [0, 1]
+diff-args = [
+  "diff",
+  "--no-index",
+  "--patience",
+  "--color=always",
+  "--color-words",
+  "--no-prefix",
+  "--compact-summary",
+  "--patch",
+  "$left",
+  "$right",
+]
 
 #[merge-tools.idea]
 #merge-args = ["-na", "/Users/andrewaylett/Applications/IntelliJ IDEA Ultimate.app/Contents/MacOS/idea", "-W", "--args", "merge", "$left", "$right", "$base", "$output"]
