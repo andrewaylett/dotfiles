@@ -52,9 +52,10 @@ colocate = true
 'working_fork_point()' = 'fork_point(working_heads())'
 'working_set()' = 'connected(working_fork_point() | working_heads())'
 
-'branch_heads()' = 'working_refs() | remote_bookmarks() | first_parent(@) | working_copies()'
+'branch_heads()' = 'working_heads() | remote_bookmarks()'
 'branch_fork_point()' = 'fork_point(branch_heads())'
 'branch_set()' = 'connected(branch_heads() | branch_fork_point())'
+'branch_log()' = 'ancestors(branch_set(), 2)'
 
 [revsets]
 'log' = 'ancestors(working_set(), 2)'
@@ -144,7 +145,7 @@ rebase-all-trunk = ["rebase", "-b", "(visible_heads() ~ immutable_heads()) & wor
 sq = ["squash"]
 nt = ["new", "trunk()"]
 log-all = ["log", "-r", "::"]
-log-branches = ["log", "-r", "branch_set()"]
+log-branches = ["log", "-r", "branch_log()"]
 
 [template-aliases]
 'micro_commit_info(c)' = '''

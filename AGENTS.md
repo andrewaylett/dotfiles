@@ -29,7 +29,7 @@ DO:
 * Use pre-commit
  * Include https://github.com/andrewaylett/pre-commit-hooks
 * Use jj
-* Run linters with their fix option enabled
+* Run linters with their fix option enabled, or run formatters before linters
 
 # Documentation
 
