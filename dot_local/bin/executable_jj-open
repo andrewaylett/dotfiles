@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Open something useful in the browser for a jj repo.
+#
+# Default: open the PR for the given (or current) commit on GitHub. If the
+# commit isn't associated with a PR, walk up its mutable ancestors and open
+# the first PR found. Fall back to the repo page if nothing matches, gh is
+# unavailable, or the remote isn't GitHub.
+
+set -euo pipefail
+
+URL=$(jj git remote list | awk '$1 == "origin" { print $2 }')
+# SSH: git@host:user/repo.git → https://host/user/repo
+URL=$(echo "$URL" | sed -E 's|^git@([^:]+):|https://\1/|')
+URL=${URL%.git}
+
+if [[ "$URL" =~ ^https://github\.com/([^/]+)/([^/]+)$ ]] && command -v gh >/dev/null; then
+  OWNER="${BASH_REMATCH[1]}"
+  REPO="${BASH_REMATCH[2]}"
+  REV="${1:-@}"
+  for SHA in $(jj log -r "(::$REV) & mutable()" --no-graph -T 'commit_id ++ "\n"'); do
+    # gh writes API error bodies to stdout, so a failed call (e.g. 422 for
+    # an unpushed commit) would otherwise pollute PR_URL — clear it and
+    # only trust output that actually parses as an HTTPS URL.
+    PR_URL=$(gh api "repos/$OWNER/$REPO/commits/$SHA/pulls" --jq '.[0].html_url // empty' 2>/dev/null) || PR_URL=""
+    if [[ "$PR_URL" =~ ^https://[^[:space:]]+$ ]]; then
+      exec open "$PR_URL"
+    fi
+  done
+fi
+
+exec open "$URL"
