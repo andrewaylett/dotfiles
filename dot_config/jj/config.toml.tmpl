@@ -57,25 +57,28 @@ colocate = true
 'branch_set()' = 'connected(branch_heads() | branch_fork_point())'
 'branch_log()' = 'ancestors(branch_set(), 2)'
 
+'closest_pushable(to)' = 'heads(::to & mutable() & ~description(exact:"") & (~empty() | merges()))'
+
 [revsets]
 'log' = 'ancestors(working_set(), 2)'
 #'log' = 'present(@) | ancestors((live_heads().. | working_set()), 2) | present(trunk())'
+bookmark-advance-to = 'closest_pushable(@)'
 
 [aliases]
 with-git = ["util", "exec", "--", "bash", "-c", """
 set -euo pipefail
-export GIT_DIR=$(jj git root)
+export GIT_DIR=$(jj --ignore-working-copy git root)
 exec "$0" "$@"
 """]
 pre-commit = ["util", "exec", "--", "bash", "-c", """
 set -euo pipefail
 
-REPO_ROOT="$(dirname $(jj config path --user))"
+REPO_ROOT="$(dirname $(jj --ignore-working-copy config path --user))"
 PASSED_FILE="$REPO_ROOT/pre-commit-passes"
 
 touch "$PASSED_FILE"
 
-export GIT_DIR=$(jj git root)
+export GIT_DIR=$(jj --ignore-working-copy git root)
 TREE=$(git rev-parse HEAD^{tree})
 
 if grep -Fxq "$TREE" "$PASSED_FILE"; then
@@ -88,8 +91,8 @@ if [ "$EMPTY" = "false" ]; then
   jj new
 fi
 
-FROM=$(jj log --no-graph -r "fork_point(trunk() | @)" -T "commit_id")
-TO=$(jj log --no-graph -r "@-" -T "commit_id")
+FROM=$(jj --ignore-working-copy log --no-graph -r "fork_point(trunk() | @)" -T "commit_id")
+TO=$(jj --ignore-working-copy log --no-graph -r "@-" -T "commit_id")
 
 if grep -Fxq "$TO" "$PASSED_FILE"; then
   echo "pre-commit already passed for $TO, skipping."
@@ -108,14 +111,14 @@ fi
 pre-commit-branch = ["util", "exec", "--", "bash", "-c", """
 set -euo pipefail
 
-REPO_ROOT="$(dirname $(jj config path --user))"
+REPO_ROOT="$(dirname $(jj --ignore-working-copy config path --user))"
 PASSED_FILE="$REPO_ROOT/pre-commit-passes"
 
 touch "$PASSED_FILE"
 
-for change in $(jj log -r "(::@ & mutable()):: ~ empty()" --no-graph -T 'change_id ++ "\n"' --reversed)
+for change in $(jj --ignore-working-copy log -r "(::@ & mutable()):: ~ empty()" --no-graph -T 'change_id ++ "\n"' --reversed)
 do
-  TO=$(jj log --no-graph -r "$change" -T "commit_id")
+  TO=$(jj --ignore-working-copy log --no-graph -r "$change" -T "commit_id")
   TREE=$(git rev-parse $TO^{tree})
 
   if grep -Fxq "$TO" "$PASSED_FILE"; then
@@ -124,8 +127,8 @@ do
     echo "pre-commit already passed for the tree in $change, skipping."
   else
     jj new "$change"
-    [ "$(jj log --no-graph -r @ -T conflict)" = "false" ] || break
-    jj pre-commit
+    [ "$(jj --ignore-working-copy log --no-graph -r @ -T conflict)" = "false" ] || break
+    jj --ignore-working-copy pre-commit
   fi
 done
 """, ""]
