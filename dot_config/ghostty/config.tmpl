@@ -1,6 +1,10 @@
 theme = light:iTerm2 Solarized Light,dark:iTerm2 Solarized Dark
 minimum-contrast = 3
+{{- if eq .osid "darwin-amd64" }}
+command = {{ .chezmoi.homeDir }}/.nix-profile/bin/fish
+{{- else }}
 command = {{ .brew.prefix }}/bin/fish
+{{- end }}
 macos-option-as-alt=left
 cursor-click-to-move=true
 font-family="IBM Plex Mono"

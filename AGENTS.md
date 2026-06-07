@@ -33,13 +33,23 @@ DO:
 
 # Documentation
 
-Always add suitable documentation.  Emphasise why over how, and if you don't
-know why then ask instead of guessing.  Documentation should normally be
-developer-focused.
+Always add suitable documentation, according to the Diátaxis compass: https://diataxis.fr/.
+If you don't know why something is the way you found it, ask instead of guessing.
+
+In general, follow these guidelines:
+* AGENTS.md is explanation
+* README.md is reference
+* Doc-comments are reference
+* Inline comments are explanation
+
+Tutorials and How-Tos may live in module-level documentation, and there may
+also be other appropriate places to add different types of documentation.
 
 If you learn something about the code that's worth remembering, document it in
 an AGENTS.md file in the root of the repository, or in the nearest AGENTS.md if
 the project has more than one.
+
+Don't be afraid to start adding documentation or tests when they're missing.
 
 ## Language Use
 

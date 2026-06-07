@@ -1,6 +1,10 @@
 fish_add_path {{ .brew.prefix }}/bin
 
 if status is-interactive
+{{- if eq .osid "darwin-amd64" }}
+    {{ .chezmoi.homeDir }}/.local/bin/mise activate fish | source
+{{- end }}
+
     # Commands to run in interactive sessions can go here
     atuin init fish | sed 's/-k up/up/' | source
     if not chezmoi verify

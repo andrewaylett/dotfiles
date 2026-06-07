@@ -1,14 +1,3 @@
-function claude --description 'Launch Claude Code with theme matching macOS appearance' --wraps claude
-    set -l theme light
-    if defaults read -g AppleInterfaceStyle &>/dev/null
-        set theme dark
-    end
-
-    set -l config_file ~/.claude.json
-    if test -f $config_file
-        jq --arg t $theme '.theme = $t' $config_file >$config_file.tmp
-            and mv $config_file.tmp $config_file
-    end
-
+function claude --description 'Launch Claude Code' --wraps claude
     fnox exec --profile claude -- command claude $argv
 end
