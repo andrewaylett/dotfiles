@@ -59,6 +59,11 @@ colocate = true
 
 'closest_pushable(to)' = 'heads(::to & mutable() & ~description(exact:"") & (~empty() | merges()))'
 
+'unsynced_push_marks()' = 'bookmarks("push-*") ~ tracked_remote_bookmarks("push-*")'
+'unsynced_branch_push_marks()' = '::@ & unsynced_push_marks()'
+'push_stack()' = 'latest(unsynced_branch_push_marks(), push_limit())'
+'push_limit()' = '5'
+
 [revsets]
 'log' = 'ancestors(working_set(), 2)'
 #'log' = 'present(@) | ancestors((live_heads().. | working_set()), 2) | present(trunk())'
@@ -141,6 +146,8 @@ sq = ["squash"]
 nt = ["new", "trunk()"]
 log-all = ["log", "-r", "::"]
 log-branches = ["log", "-r", "branch_log()"]
+
+push-stack = ["git", "push", "-r", "push_stack()"]
 
 [template-aliases]
 'micro_commit_info(c)' = '''

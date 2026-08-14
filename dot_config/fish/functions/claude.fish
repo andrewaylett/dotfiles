@@ -10,5 +10,5 @@ function claude --description 'Launch Claude Code with theme matching macOS appe
             and mv $config_file.tmp $config_file
     end
 
-    fnox exec -- command claude $argv
+    fnox exec --profile claude -- command claude $argv
 end
